@@ -80,10 +80,24 @@ func WithSubnetwork(subnetwork string) Option {
 	}
 }
 
+// WithStackType returns an option to set the stack type for the instance.
+func WithStackType(stackType string) Option {
+	return func(p *provider) {
+		p.stackType = stackType
+	}
+}
+
 // WithPrivateIP returns an option to set the private IP address.
 func WithPrivateIP(private bool) Option {
 	return func(p *provider) {
 		p.privateIP = private
+	}
+}
+
+// WithPrivateIPc6 returns an option to use a private IPv6 address.
+func WithPrivateIPv6(private bool) Option {
+	return func(p *provider) {
+		p.privateIPv6 = private
 	}
 }
 

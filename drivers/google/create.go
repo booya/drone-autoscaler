@@ -88,6 +88,7 @@ func (p *provider) Create(ctx context.Context, opts autoscaler.InstanceCreateOpt
 			{
 				Network:       p.network,
 				Subnetwork:    p.subnetwork,
+				StackType:     p.stackType,
 				AccessConfigs: networkConfig,
 			},
 		},
