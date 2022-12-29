@@ -18,19 +18,18 @@ import (
 
 func TestCreate(t *testing.T) {
 	defer gock.Off()
-
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Post("/compute/v1/projects/my-project/zones/us-central1-a/instances").
 		JSON(insertInstanceMock).
 		Reply(200).
 		BodyString(`{ "name": "operation-name" }`)
 
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Get("/compute/v1/projects/my-project/zones/us-central1-a/instances/agent-807jvfwj").
 		Reply(200).
 		BodyString(`{ "networkInterfaces": [ { "accessConfigs": [ { "natIP": "1.2.3.4" } ] } ] }`)
 
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Get("/compute/v1/projects/my-project/zones/us-central1-a/operations/operation-name").
 		Reply(200).
 		BodyString(`{ "status": "DONE" }`)
@@ -82,18 +81,18 @@ func TestCreate(t *testing.T) {
 func TestCreateWithMultiZones(t *testing.T) {
 	defer gock.Off()
 
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Post("/compute/v1/projects/my-project/zones/us-central1-b/instances").
 		JSON(insertInstanceMockB).
 		Reply(200).
 		BodyString(`{ "name": "operation-name" }`)
 
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Get("/compute/v1/projects/my-project/zones/us-central1-b/instances/agent-807jvfwj").
 		Reply(200).
 		BodyString(`{ "networkInterfaces": [ { "accessConfigs": [ { "natIP": "1.2.3.4" } ] } ] }`)
 
-	gock.New("https://www.googleapis.com").
+	gock.New("https://compute.googleapis.com").
 		Get("/compute/v1/projects/my-project/zones/us-central1-b/operations/operation-name").
 		Reply(200).
 		BodyString(`{ "status": "DONE" }`)
@@ -154,7 +153,8 @@ var insertInstanceMock = &compute.Instance{
 	CanIpForward: false,
 	NetworkInterfaces: []*compute.NetworkInterface{
 		{
-			Network: "global/networks/default",
+			Network:   "global/networks/default",
+			StackType: "IPV4_ONLY",
 			AccessConfigs: []*compute.AccessConfig{
 				{
 					Name: "External NAT",
@@ -216,7 +216,8 @@ var insertInstanceMockB = &compute.Instance{
 	CanIpForward: false,
 	NetworkInterfaces: []*compute.NetworkInterface{
 		{
-			Network: "global/networks/default",
+			Network:   "global/networks/default",
+			StackType: "IPV4_ONLY",
 			AccessConfigs: []*compute.AccessConfig{
 				{
 					Name: "External NAT",
